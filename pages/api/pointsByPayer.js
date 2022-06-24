@@ -27,10 +27,13 @@ export default function handler(req, res) {
   } else if (req.method === 'POST') {
     const body = JSON.parse(req.body)
     const formattedBody = { ...body, points: Number(body.points) }
+
     pointsRawArr.push(formattedBody)
     addPointsByPayer(formattedBody)
+
     console.log('POST', pointsByPayer)
     res.status(200).json(pointsByPayer)
+    // TODO `DELETE` 🤔 should we ever need the ability to completely remove a payer from our system?
   } else {
     res.status(404)
   }
