@@ -43,9 +43,15 @@ UNILEVER: 0
 MILLER COORS: 5300
 ```
 
-To verify the payload is correct for `POST /api/spendPoints` please view the network tab.
+To verify the payload is correct for `POST /api/spendPoints` please view the network tab:
 
-Alternatively, you can simply [run this app locally](#Deploy locally) and see the payloads in STDOUT logs in the node environment.
+```
+[{"DANNON":-100},{"UNILEVER":-200},{"MILLER COORS":-4700}]
+```
+
+You should never be able to spend more points than are available (no negative points). In that case the status is handled with a 422 response code.
+
+Alternatively, you can simply run this app locally to see the payloads STDOUT logs in the node environment.
 
 ## Deploy locally
 
