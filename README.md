@@ -5,12 +5,12 @@ This exercise is deployed using NextJS and Vercel: https://points-amber.vercel.a
 
 ## How to verify response payloads
 
-> 🗣️ As part of this exercise the following APIs and actions were built in accordance with [these requirements](https://fetch-hiring.s3.us-east-1.amazonaws.com/points.pdf).
+> 🗣️ As part of this exercise the following APIs and GUI were built in accordance with [these requirements](https://fetch-hiring.s3.us-east-1.amazonaws.com/points.pdf).
 
-- /api/pointsByPayer
+- [/api/pointsByPayer](https://github.com/jflayhart/points/blob/main/pages/api/pointsByPayer.js)
   - GET: retrieves all points balance
   - POST: adds a points transaction
-- /api/spendPoints
+- [/api/spendPoints](https://github.com/jflayhart/points/blob/main/pages/api/spendPoints.js)
   - POST: spends points
 
 > 🗣️ **View the live app** at https://points-amber.vercel.app/ in [Chrome](https://www.google.com/chrome) and open your network tab.
