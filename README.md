@@ -1,6 +1,6 @@
 # View Live app
 
-https://points-amber.vercel.app/
+This exercise is deployed using NextJS and Vercel: https://points-amber.vercel.app/
 
 
 ## How to verify response payloads
