@@ -2,19 +2,10 @@
 
 https://points-amber.vercel.app/
 
-## Deploy locally
 
-Deploy the example by checking out this repo and running the following commands (make sure you have [yarn installed](https://yarnpkg.com/)):
-
-```bash
-yarn install
-yarn dev
-````
-
-View dev site at http://localhost:3000 :tada:
 ## How to verify response payloads
 
-> As part of this exercise the following APIs and actions were built in accordance with [these requirements](https://fetch-hiring.s3.us-east-1.amazonaws.com/points.pdf).
+> 🗣️ As part of this exercise the following APIs and actions were built in accordance with [these requirements](https://fetch-hiring.s3.us-east-1.amazonaws.com/points.pdf).
 
 - /api/pointsByPayer
   - GET: retrieves all points balance
@@ -22,9 +13,9 @@ View dev site at http://localhost:3000 :tada:
 - /api/spendPoints
   - POST: spends points
 
-**View the live app** at https://points-amber.vercel.app/ in [Chrome](https://www.google.com/chrome) and open your network tab.
+> 🗣️ **View the live app** at https://points-amber.vercel.app/ in [Chrome](https://www.google.com/chrome) and open your network tab.
 
-The first response you receive will be `GET /api/pointsByPayer` and will initially be empty. You must first add points!
+The first API response you receive in network tab should be `GET /api/pointsByPayer` and will initially be empty. You must first add points!
 
 **To add points simply do the following in sequenece to verify this exercise:**
 
@@ -42,7 +33,7 @@ UNILEVER: 200
 MILLER COORS: 10000
 ```
 
-**Now it is time to spend points!**
+**Now it is time to spend points!** 🤑
 
 Add `5000` to the Spend input and click "Spend points!". Now you should see the GUI update to:
 
@@ -55,3 +46,14 @@ MILLER COORS: 5300
 To verify the payload is correct for `POST /api/spendPoints` please view the network tab.
 
 Alternatively, you can simply [run this app locally](#Deploy locally) and see the payloads in STDOUT logs in the node environment.
+
+## Deploy locally
+
+Deploy the example by checking out this repo and running the following commands (make sure you have [yarn installed](https://yarnpkg.com/)):
+
+```bash
+yarn install
+yarn dev
+````
+
+View dev site at http://localhost:3000 :tada:
