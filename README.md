@@ -1,25 +1,57 @@
-# API routes with REST
+# View Live app
 
-Next.js ships with [API routes](https://github.com/vercel/next.js#api-routes), which provide an easy solution to build your own `API`. This example shows how it can be used to create your [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) `API`.
+https://points-amber.vercel.app/
 
-## Deploy your own
+## Deploy locally
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/api-routes-rest)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/api-routes-rest&project-name=api-routes-rest&repository-name=api-routes-rest)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+Deploy the example by checking out this repo and running the following commands (make sure you have [yarn installed](https://yarnpkg.com/)):
 
 ```bash
-npx create-next-app --example api-routes-rest api-routes-rest-app
-# or
-yarn create next-app --example api-routes-rest api-routes-rest-app
-# or
-pnpm create next-app --example api-routes-rest api-routes-rest-app
+yarn install
+yarn dev
+````
+
+View dev site at http://localhost:3000 :tada:
+## How to verify response payloads
+
+> As part of this exercise the following APIs and actions were built in accordance with [these requirements](https://fetch-hiring.s3.us-east-1.amazonaws.com/points.pdf).
+
+- /api/pointsByPayer
+  - GET: retrieves all points balance
+  - POST: adds a points transaction
+- /api/spendPoints
+  - POST: spends points
+
+**View the live app** at https://points-amber.vercel.app/ in [Chrome](https://www.google.com/chrome) and open your network tab.
+
+The first response you receive will be `GET /api/pointsByPayer` and will initially be empty. You must first add points!
+
+**To add points simply do the following in sequenece to verify this exercise:**
+
+1. Add DANNON with 300 points
+2. Add UNILEVER with 200 points
+3. Add DANNON with -200 points (yes, I know the exercise says not to allow points to go negative, but this is from the exercise's example!)
+4. Add MILLER COORS with 10000
+5. Add DANNON with 1000 points
+
+In your network tab you should see five network calls `POST /api/pointsByPayer` with the required payload. Furthermore, in the GUI you should see the following:
+
+```
+DANNON: 1100
+UNILEVER: 200
+MILLER COORS: 10000
 ```
 
-### Deploy to Vercel
+**Now it is time to spend points!**
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+Add `5000` to the Spend input and click "Spend points!". Now you should see the GUI update to:
+
+```
+DANNON: 1000
+UNILEVER: 0
+MILLER COORS: 5300
+```
+
+To verify the payload is correct for `POST /api/spendPoints` please view the network tab.
+
+Alternatively, you can simply [run this app locally](#Deploy locally) and see the payloads in STDOUT logs in the node environment.
