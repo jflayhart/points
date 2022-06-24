@@ -1,3 +1,10 @@
+/**
+ * /api/spendPoints:
+ *   post:
+ *     @param req.body { points: int }
+ *     @desc Spends oldest points first using the given request payload
+ *     @returns key-val pair of points spent as negative integers for each payer
+ */
 export default function handler(req, res) {
     if (req.method === 'POST') {
         // pointsRawArr is global, sort in-place, timestamp asc (FIFO)
@@ -6,8 +13,8 @@ export default function handler(req, res) {
         let pointsToSpend = Number(body.points)
         let spentPointsByPayer = {}
         // spend oldest points first and reduce in-place
-        // also track spentPointsByPayer
-        // TODO how should we handle spending more points than are available? skip or still deduct?
+        // also track spentPointsByPayer while updating original pointsRawArr
+        // TODO how should we handle spending more points than are available? skip or spend?
         pointsRawArr = pointsRawArr.reduce((acc, currVal) => {
             if (currVal.points !== 0 && pointsToSpend > 0 && pointsToSpend >= currVal.points) {
                 console.log(`removing ${JSON.stringify(currVal)}`)
@@ -38,11 +45,12 @@ export default function handler(req, res) {
         }, [])
 
         const response = Object.keys(spentPointsByPayer).map(key => {
+            // update current pointsByPayer
             pointsByPayer[key] += spentPointsByPayer[key]
             return { [key]: spentPointsByPayer[key] }
         })
         if (response.length > 0) {
-            console.log(response)
+            console.log('POST spendPoints', response)
             res.status(200).json(response)
         } else {
             res.status(422).send('Not enough points to spend!')

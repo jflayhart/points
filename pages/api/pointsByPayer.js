@@ -20,9 +20,17 @@ global.pointsByPayer = {}
 pointsRawArr.forEach(addPointsByPayer)
 console.log('server init')
 
+/**
+ * /api/pointsByPayer:
+ *   get:
+ *     @returns an object of all points grouped by payer
+ *   post:
+ *     @param req.body { payer: string, points: int, timestamp: date }
+ *     @returns updated object of all points grouped by payer
+ */
 export default function handler(req, res) {
   if (req.method === 'GET') {
-    console.log('GET', pointsByPayer)
+    console.log('GET pointsByPayer', pointsByPayer)
     res.status(200).json(pointsByPayer)
   } else if (req.method === 'POST') {
     const body = JSON.parse(req.body)
@@ -31,9 +39,9 @@ export default function handler(req, res) {
     pointsRawArr.push(formattedBody)
     addPointsByPayer(formattedBody)
 
-    console.log('POST', pointsByPayer)
+    console.log('POST pointsByPayer', pointsByPayer)
     res.status(200).json(pointsByPayer)
-    // TODO `DELETE` 🤔 should we ever need the ability to completely remove a payer from our system?
+    // TODO `DELETE` 🤔 should we ever need the ability to completely remove a payer from our system and/or update points for a bad transaction (PUT)?
   } else {
     res.status(404)
   }
