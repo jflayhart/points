@@ -10,7 +10,7 @@ export default function Index() {
       .then((data) => setCurrentPoints(data))
   }, [])
 
-  function handleOnSubmit(e) {
+  function handleOnAddSubmit(e) {
     e.preventDefault()
     const body = JSON.stringify({
       payer: e.target.new_payer?.value || e.target.payer.value,
@@ -24,6 +24,24 @@ export default function Index() {
       })
   }
 
+  function handleOnSpendSubmit(e) {
+    e.preventDefault()
+    const body = JSON.stringify({
+      points: e.target.points.value
+    })
+    fetch('/api/spendPoints', { method: 'POST', body })
+        .then((res) => res.json())
+        .then((points) => {
+            const updatedPoints = {}
+            points.forEach(p => {
+              Object.keys(p).forEach(key => {
+                  updatedPoints[key] = currentPoints[key] + p[key]
+              })
+            })
+            setCurrentPoints(updatedPoints)
+        })
+  }
+
   function handleOnChange(e) {
     e.preventDefault()
     if (e.target.value === "new") {
@@ -35,12 +53,14 @@ export default function Index() {
 
   return (
     <div>
+      <h2>Total Points</h2>
       <ul>
         {Object.keys(currentPoints).map((key, i) => (
           <li key={i}>{key}: {currentPoints[key]}</li>
         ))}
       </ul>
-      <form onSubmit={handleOnSubmit}>
+      <h2>Add</h2>
+      <form onSubmit={handleOnAddSubmit}>
         <div>
           <label>Enter payer name: </label>
           <select id="payer" name="payer" onChange={handleOnChange}>
@@ -53,9 +73,15 @@ export default function Index() {
         </div>
         <div>
           <label>Enter payer points: </label>
-          <input type="number" min="1" name="points" id="points" required />
+          <input type="number" name="points" id="points" required />
         </div>
         <input type="submit" value="Add points!" />
+      </form>
+
+      <h2>Spend</h2>
+      <form onSubmit={handleOnSpendSubmit}>
+        <input type="number" min="1" name="points" id="points" placeholder="enter points" required />
+        <input type="submit" value="Spend points!" disabled={Object.keys(currentPoints).length === 0} />
       </form>
     </div>
   )
