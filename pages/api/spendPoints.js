@@ -16,8 +16,12 @@ export default function handler(req, res) {
         // also track spentPointsByPayer while updating original pointsRawArr
         // TODO how should we handle spending more points than are available? skip or spend?
         pointsRawArr = pointsRawArr.reduce((acc, currVal) => {
-            if (currVal.points !== 0 && pointsToSpend > 0 && pointsToSpend >= currVal.points) {
-                console.log(`removing ${JSON.stringify(currVal)}`)
+            if (currVal.points === 0 || pointsToSpend === 0) {
+                acc.push(currVal)
+                return acc
+            }
+            if (pointsToSpend >= currVal.points) {
+                console.log(`depleting all points for ${JSON.stringify(currVal)}`)
                 pointsToSpend -= currVal.points
                 if (spentPointsByPayer[currVal.payer]) {
                     spentPointsByPayer[currVal.payer] -= currVal.points
@@ -28,7 +32,7 @@ export default function handler(req, res) {
                     ...currVal,
                     points: 0
                 })
-            } else if (currVal.points !== 0 && pointsToSpend > 0) {
+            } else {
                 console.log(`decreasing ${pointsToSpend} points: ${JSON.stringify(currVal)}`)
                 spentPointsByPayer[currVal.payer] = (currVal.points - pointsToSpend) - currVal.points
 
@@ -37,9 +41,6 @@ export default function handler(req, res) {
                     points: currVal.points - pointsToSpend
                 })
                 pointsToSpend = 0
-            } else {
-                console.log('nothing to do', currVal)
-                acc.push(currVal)
             }
             return acc
         }, [])

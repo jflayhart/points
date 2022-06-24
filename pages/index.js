@@ -6,6 +6,7 @@ export default function Index() {
   const [errorMsg, setErrorMsg] = useState('')
 
   useEffect(() => {
+    setErrorMsg('')
     fetch('/api/pointsByPayer')
       .then((res) => res.json())
       .then((data) => setCurrentPoints(data))
@@ -21,6 +22,7 @@ export default function Index() {
     fetch('/api/pointsByPayer', { method: 'POST', body })
       .then((res) => res.json())
       .then((data) => {
+        setErrorMsg('')
         setCurrentPoints(data)
       })
   }
