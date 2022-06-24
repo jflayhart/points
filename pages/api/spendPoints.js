@@ -7,38 +7,42 @@ export default function handler(req, res) {
         let spentPointsByPayer = {}
         // spend oldest points first and reduce in-place
         // also track spentPointsByPayer
-        // TODO what happens if we're spending more points than are available?
+        // TODO how should we handle spending more points than are available? skip or still deduct?
         pointsRawArr = pointsRawArr.reduce((acc, currVal) => {
-            if (pointsToSpend > currVal.points) {
+            if (currVal.points !== 0 && pointsToSpend > 0 && pointsToSpend >= currVal.points) {
+                console.log(`removing ${JSON.stringify(currVal)}`)
                 pointsToSpend -= currVal.points
                 if (spentPointsByPayer[currVal.payer]) {
                     spentPointsByPayer[currVal.payer] -= currVal.points
                 } else {
                     spentPointsByPayer[currVal.payer] = -currVal.points
                 }
-            } else {
-                if (pointsToSpend > 0) {
-                    spentPointsByPayer[currVal.payer] = (currVal.points - pointsToSpend) - currVal.points
+                acc.push({
+                    ...currVal,
+                    points: 0
+                })
+            } else if (currVal.points !== 0 && pointsToSpend > 0) {
+                console.log(`decreasing ${pointsToSpend} points: ${JSON.stringify(currVal)}`)
+                spentPointsByPayer[currVal.payer] = (currVal.points - pointsToSpend) - currVal.points
 
-                    acc.push({
-                        ...currVal,
-                        points: currVal.points - pointsToSpend
-                    })
-                    pointsToSpend = 0
-                } else {
-                    acc.push(currVal)
-                }
+                acc.push({
+                    ...currVal,
+                    points: currVal.points - pointsToSpend
+                })
+                pointsToSpend = 0
+            } else {
+                console.log('nothing to do', currVal)
+                acc.push(currVal)
             }
             return acc
         }, [])
 
         const response = Object.keys(spentPointsByPayer).map(key => {
-            console.log(key, pointsByPayer[key])
-            console.log(spentPointsByPayer)
             pointsByPayer[key] += spentPointsByPayer[key]
             return { [key]: spentPointsByPayer[key] }
         })
-        if (pointsRawArr.length > 0) {
+        if (response.length > 0) {
+            console.log(response)
             res.status(200).json(response)
         } else {
             res.status(422).send('Not enough points to spend!')

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 export default function Index() {
   const [shouldAddNew, setShouldAddNew] = useState(true)
   const [currentPoints, setCurrentPoints] = useState({})
+  const [errorMsg, setErrorMsg] = useState('')
 
   useEffect(() => {
     fetch('/api/pointsByPayer')
@@ -30,16 +31,24 @@ export default function Index() {
       points: e.target.points.value
     })
     fetch('/api/spendPoints', { method: 'POST', body })
-        .then((res) => res.json())
+        .then((res) => {
+            if (res.ok) return res.json()
+            throw new Error(res.statusText)
+        })
         .then((points) => {
+            setErrorMsg('')
             const updatedPoints = {}
             points.forEach(p => {
               Object.keys(p).forEach(key => {
                   updatedPoints[key] = currentPoints[key] + p[key]
               })
             })
-            setCurrentPoints(updatedPoints)
+            setCurrentPoints({
+                ...currentPoints,
+                ...updatedPoints
+            })
         })
+        .catch(e => setErrorMsg(e.message))
   }
 
   function handleOnChange(e) {
@@ -53,7 +62,7 @@ export default function Index() {
 
   return (
     <div>
-      <h2>Total Points</h2>
+      <h2>Total Points by Payer</h2>
       <ul>
         {Object.keys(currentPoints).map((key, i) => (
           <li key={i}>{key}: {currentPoints[key]}</li>
@@ -81,7 +90,8 @@ export default function Index() {
       <h2>Spend</h2>
       <form onSubmit={handleOnSpendSubmit}>
         <input type="number" min="1" name="points" id="points" placeholder="enter points" required />
-        <input type="submit" value="Spend points!" disabled={Object.keys(currentPoints).length === 0} />
+        <input type="submit" value="Spend points!" disabled={Object.keys(currentPoints).length === 0 || errorMsg} />
+        <span style={{color: 'red'}}>{errorMsg}</span>
       </form>
     </div>
   )

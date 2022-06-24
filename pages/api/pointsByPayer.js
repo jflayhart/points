@@ -18,16 +18,18 @@ global.pointsByPayer = {}
 
 // normalize data for O(1) lookup
 pointsRawArr.forEach(addPointsByPayer)
-console.log('ONCE')
+console.log('server init')
 
 export default function handler(req, res) {
   if (req.method === 'GET') {
+    console.log('GET', pointsByPayer)
     res.status(200).json(pointsByPayer)
   } else if (req.method === 'POST') {
     const body = JSON.parse(req.body)
-    pointsRawArr.push(body)
-    addPointsByPayer(body)
-
+    const formattedBody = { ...body, points: Number(body.points) }
+    pointsRawArr.push(formattedBody)
+    addPointsByPayer(formattedBody)
+    console.log('POST', pointsByPayer)
     res.status(200).json(pointsByPayer)
   } else {
     res.status(404)
